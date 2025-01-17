@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Login</title>
+    <style>
+        /* Base Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Background and Container Styles */
+        body {
+            background: url('https://i.postimg.cc/V6BszKPQ/IMG-20250117-105415-417.jpg') no-repeat center center/cover;
+            position: relative;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+        }
+
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        .container {
+            position: relative;
+            z-index: 2; /* Ensure it appears above particles */
+            background: rgba(0, 0, 0, 0.7);
+            padding: 30px 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .container h1 {
+            font-size: 30px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #ffffff;
+            animation: glowText 2s infinite;
+        }
+
+        @keyframes glowText {
+            0%, 100% { text-shadow: 0 0 10px #ffffff, 0 0 20px #ffffff; }
+            50% { text-shadow: 0 0 20px #ffffff, 0 0 40px #ffffff; }
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus {
+            background-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 15px #ffffff;
+        }
+
+        .input-group label {
+            position: absolute;
+            top: 12px;
+            left: 15px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            pointer-events: none;
+            transition: 0.3s ease;
+        }
+
+        .input-group input:focus + label,
+        .input-group input:not(:placeholder-shown) + label {
+            top: -15px;
+            font-size: 12px;
+            color: #ffffff;
+        }
+
+        .button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(90deg, #ffffff, #9e9e9e);
+            color: #000;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 255, 255, 0.4);
+        }
+
+        .popup-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .popup-box {
+            background-color: rgba(0, 0, 0, 0.95);
+            padding: 20px 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .popup-box h2 {
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+
+        .popup-box button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 2px solid #ffffff;
+            border-radius: 5px;
+            background-color: transparent;
+            color: #ffffff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .popup-box button:hover {
+            background-color: #ffffff;
+            color: #000;
+        }
+
+        .error-message {
+            color: #ff4d4d;
+            margin-top: 10px;
+            font-size: 14px;
+            display: none;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+</head>
+<body>
+    <div id="particles-js"></div>
+
+    <div class="container">
+        <h1>ITZ MOR WEB LOGIN</h1>
+        <form id="login-form">
+            <div class="input-group">
+                <input type="text" id="game-mode" placeholder=" " readonly onclick="showPopup('mode')">
+                <label for="game-mode">Select Game Mode</label>
+            </div>
+            <div class="input-group">
+                <input type="text" id="game-version" placeholder=" " readonly onclick="showPopup('version')">
+                <label for="game-version">Select Game Version</label>
+            </div>
+            <div class="input-group">
+                <input type="text" id="paid-key" placeholder=" " required>
+                <label for="paid-key">Enter Paid Key</label>
+            </div>
+            <button type="button" class="button" onclick="checkKey()">Login</button>
+            <p id="error-message" class="error-message">Incorrect Paid Key!</p>
+        </form>
+    </div>
+
+    <div class="popup-container" id="popup-container">
+        <div class="popup-box" id="popup-box">
+            <h2>Select an Option</h2>
+        </div>
+    </div>
+
+    <script>
+        let popupType = "";
+
+        function showPopup(type) {
+            popupType = type;
+            document.getElementById("popup-box").innerHTML = `<h2>Select ${type === 'mode' ? 'Game Mode' : 'Game Version'}</h2>`;
+            const options = type === "mode"
+                ? ["91 Club", "55 Club", "82 Lottery", "Goa Games", "Big Daddy", "OK Win", "TC Lottery", "Dream 99"]
+                : ["1 Minute"];
+            options.forEach(option => {
+                document.getElementById("popup-box").innerHTML += `<button onclick="selectOption('${option}')">${option}</button>`;
+            });
+            document.getElementById("popup-container").style.display = "flex";
+        }
+
+        function selectOption(option) {
+            if (popupType === "mode") {
+                document.getElementById("game-mode").value = option;
+            } else if (popupType === "version") {
+                document.getElementById("game-version").value = option;
+            }
+            closePopup();
+        }
+
+        function closePopup() {
+            document.getElementById("popup-container").style.display = "none";
+        }
+
+        function checkKey() {
+            const key = document.getElementById("paid-key").value.trim();
+            const correctKey = "ITZ MOR";
+
+            const errorMessage = document.getElementById("error-message");
+
+            if (key === correctKey) {
+                window.location.href = "fuck.html";
+            } else {
+                errorMessage.style.display = "block";
+            }
+        }
+
+        particlesJS('particles-js', {
+            particles: {
+                number: { value: 50, density: { enable: true, value_area: 800 } },
+                color: { value: "#808080" },
+                shape: { type: "circle", stroke: { width: 1, color: "#d3d3d3" } },
+                opacity: { value: 0.5 },
+                size: { value: 3 },
+                move: { enable: true, speed: 1 }
+            },
+            interactivity: {
+                events: {
+                    onhover: { enable: true, mode: "repulse" },
+                    onclick: { enable: true, mode: "push" }
+                },
+                modes: { repulse: { distance: 100 } }
+            },
+            retina_detect: true
+        });
+    </script>
+</body>
+</html>
