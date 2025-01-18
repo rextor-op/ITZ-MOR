@@ -177,7 +177,7 @@
     <div id="particles-js"></div>
 
     <div class="container">
-        <h1>ITZ MOR WEB LOGIN</h1>
+        <h1>ITZ MOD WEB LOGIN</h1>
         <form id="login-form">
             <div class="input-group">
                 <input type="text" id="game-mode" placeholder=" " readonly onclick="showPopup('mode')">
@@ -209,7 +209,7 @@
             popupType = type;
             document.getElementById("popup-box").innerHTML = `<h2>Select ${type === 'mode' ? 'Game Mode' : 'Game Version'}</h2>`;
             const options = type === "mode"
-                ? ["91 Club", "55 Club", "82 Lottery", "Goa Games", "Big Daddy", "OK Win", "TC Lottery", "Dream 99"]
+                ? ["DIU WIN", "91 Club", "82 Lottery", "Goa Games", "Big Daddy", "OK Win", "TC Lottery", "Dream 99"]
                 : ["1 Minute"];
             options.forEach(option => {
                 document.getElementById("popup-box").innerHTML += `<button onclick="selectOption('${option}')">${option}</button>`;
@@ -232,7 +232,7 @@
 
         function checkKey() {
             const key = document.getElementById("paid-key").value.trim();
-            const correctKey = "ITZ MOR";
+            const correctKey = "ITZ MOD;
 
             const errorMessage = document.getElementById("error-message");
 
